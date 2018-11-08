@@ -33,7 +33,7 @@ $ sacct
 
 This is one quick way to find out a few items about your account, including job status and resources.  Note under 'AllocCPUS' this lists 2 for your job, which has a 'RUNNING' status.
 
-We need to have an interactive session with 6 cores, if you already have one you are set. If you have a session with fewer cores then `exit` out of your current interactive session and start a new one with `-n 6`.
+We need to have an interactive session with 6 cores, if you already have one you are set.  If you have a session with fewer cores then `exit` out of your current interactive session and start a new one with `-n 6`.
 
 ```bash
 $ srun --pty -p classroom -n 6 --mem 8G bash
@@ -74,7 +74,7 @@ $ cd ~/chipseq/scripts/
 $ cp /home/classroom/hpcbio/chip-seq/scripts/chipseq_analysis_on_input_file.sh .
 ```
 
-Let's look it over, step by step.  You can use `vi` or `less` to look through the script.  
+Let's look it over, step by step.  You can use `nano` (you should be familiar with this one) or `less` to look through the script.  
 
 ```bash
 #!/bin/bash/
@@ -314,7 +314,7 @@ To the run the above script you would have used the following command: `sbatch c
 
 Parallelization will save you a lot of time with real (large) datasets. To parallelize our analysis, we will still need to write a second script that will call the original script we just wrote. We will still use a `for` loop, but we will be creating a regular shell script and we will be specifying the SLURM directives a little differently.
 
-Use `vi` to start a new shell script called `chipseq_analysis_on_allfiles-for_slurm.sh`:
+Copy over a second script, called `chipseq_analysis_on_allfiles-for_slurm.sh`:
 
 ```bash
 $ cp /home/classroom/hpcbio/chip-seq/scripts/chipseq_analysis_on_allfiles_for-slurm.sh .
