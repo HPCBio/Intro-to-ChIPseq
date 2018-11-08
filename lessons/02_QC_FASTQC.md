@@ -22,11 +22,11 @@ Now that we have our files and directory structure, we are ready to begin our Ch
 
 ### Understanding the Illumina sequencing technology
 
-Before we can assess the quality of our reads, it would be helpful to know a little bit about how these reads were generated. Since our data was sequenced on an Illumina sequencer we will introduce you to their Sequencng by Synthesis methodology, however keep in mind there are other technologies and the way reads are generated will vary (as will the associated biases observed in your data).
+Before we can assess the quality of our reads, it would be helpful to know a little bit about how these reads were generated. Since our data was sequenced on an Illumina sequencer we will introduce you to their Sequencing by Synthesis methodology, however keep in mind there are other technologies and the way reads are generated will vary (as will the associated biases observed in your data).
 
 <img src="../img/sbs_illumina.png" width="700">
 
-An **animation of the Sequencing by Synthesis is most helpful** (rather than reading through lines of text), and so we would like you to take five minutes and watch [this YouTube video](https://www.youtube.com/watch?v=fCd6B5HRaZ8&t=3s) from Illumina.
+An **animation of the Sequencing by Synthesis is most helpful** (rather than reading through lines of text), and so we would like you to (at some point) take five minutes and watch [this YouTube video](https://www.youtube.com/watch?v=fCd6B5HRaZ8&t=3s) from Illumina.
 
 ### Unmapped read data (FASTQ)
 

@@ -223,13 +223,13 @@ One common artifact that occurs with sequencing libraries is the presence of PCR
 
 The key problem with PCR duplicates is that they tend to be highly biased for specific positions or fragments in the genome, thus their presence can create problems for certain applications. With ChIP-Seq analysis, for example, they can appear to a peak caller as a region of enrichment, thus showing up as a false positive.
 
-For this run we choose to mark duplicates using the tool Picard.
+We won't run PCR duplicate marking for this session, but if you want to try it this is what you can do.  First, load Picard:
 
 ```bash
 module load picard/2.10.1-Java-1.8.0_152
 ```
 
-Now let's run Picard's MarkDuplicates command:
+Then run Picard's MarkDuplicates command.  This also generates a metrics file with the number of marked duplicates.  
 
 ```bash
 java -jar $EBROOTPICARD/picard.jar MarkDuplicates \
@@ -239,7 +239,7 @@ java -jar $EBROOTPICARD/picard.jar MarkDuplicates \
     CREATE_INDEX=true
 ```
 
-This will generate another BAM file with the duplicates marked (the bit flag).  These can be optionally filtered later; some tools can also ignore any data that has the flag marked.
+This will generate another BAM file with the duplicates marked (the bit flag will be modified).  These can be optionally filtered later; additional some tools can also ignore any data that has the flag marked.  
 
 ### 4. Filtering uniquely mapping reads
 
