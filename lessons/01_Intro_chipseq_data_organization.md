@@ -68,12 +68,11 @@ $ srun --pty -p classroom --mem 8G -n 2 bash
 
 Make sure that your command prompt is now preceded by a character string that contains the word "compute".
 
->**NOTE:** We are using the `--reservation` argument and the `short` partition during class since we have a dedicated set of computers reserved so that commands run quickly. When starting an interactive session outside of class you will need to leave out this argument and use the `interactive` partition:
+>**NOTE:** We are using the `classroom` partition during class since we have a dedicated set of computers reserved so that commands run quickly on dedicated worker nodes.  When starting an interactive session outside of class you will need to leave out this argument and run as follows:
 >
 >```bash
->$ srun --pty -p interactive -t 0-12:00 --mem 8G -n 2 bash
+>$ srun -t 0-12:00 --mem 8G -n 2 --pty bash
 >```
-
 
 ## Data Management
 
@@ -110,7 +109,7 @@ First, make sure that you are in your home directory.
 $ cd
 $ pwd
 ```
-This should return `/home/username`.
+This should return something like `/home/a-m/username`.
 
 Create a `chipseq` directory and change directories into it:
 
@@ -204,11 +203,15 @@ results:
 scripts:
 ```
 
+If you are feeling even more adventurous, you can use some simple markup languages in your documents to generate files that can be reformatted; for instance, you can add formatting that can render code blocks, lists, tables, or embedded images files in other formats, such as Word, PDF, HTML, and so forth.
+
+We won't go into any more detail here, but many users who work with R (via RStudio) or Python (via Jupyter Notebook) commonly use variants of a simple formatting style called [Markdown](https://en.wikipedia.org/wiki/Markdown), which can be converted into more structured documents such as PDF, HTML, and MS Word.  In fact, this file is written in Markdown!  
+
 ***
 
 ### Homework Exercise
 
-- Create a README for the `chipseq/` folder (hint: use `vim` to create the file). Give a short description of the project and as homework add brief descriptions of the types of files you will be storing within each of the sub-directories.
+- Create a README for the `chipseq/` folder (hint: use a command-line editor like `nano` or more advanced editor like `vim` to create the file). Give a short description of the project and as homework add brief descriptions of the types of files you will be storing within each of the sub-directories.
 
 ***
 

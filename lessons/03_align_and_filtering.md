@@ -24,7 +24,7 @@ Now that we have assessed the quality of our sequence data, we are ready to alig
 <img src="../img/chip_workflow_june2017_step1_align.png" width="400">
 
 > #### How do other aligners compare?
-> In this workshop we are using Bowtie2 to align our reads, but there are a number of other options. We have explored the use of [bwa](http://bio-bwa.sourceforge.net/) for ChIP-seq analysis and found some differences. For **bwa**, the mapping rates are higher (~ 2%), with an equally similar increase in the number of duplicate mappings identified. Post-filtering this translates to a significantly higher number of mapped reads and results in a much larger number of peaks being called (30% increase). When we compare the peak calls generated from the different aligners, the **bwa** peak calls are a superset of those called from the Bowtie2 aligments. Whether or not these additional peaks are true positives, is something that is yet to be determined. 
+> In this workshop we are using Bowtie2 to align our reads, but there are a number of other options. We have explored the use of [bwa](http://bio-bwa.sourceforge.net/) for ChIP-seq analysis and found some differences. For **bwa**, the mapping rates are higher (~ 2%), with an equally similar increase in the number of duplicate mappings identified. Post-filtering this translates to a significantly higher number of mapped reads and results in a much larger number of peaks being called (30% increase). When we compare the peak calls generated from the different aligners, the **bwa** peak calls are a superset of those called from the Bowtie2 aligments. Whether or not these additional peaks are true positives, is something that is yet to be determined.
 
 ### Creating a Bowtie2 index
 
@@ -143,7 +143,7 @@ Moving along the fields of the SAM file, we then have `RNAME` which is the refer
 | N | skipped region from the reference|
 
 
-Now to the remaning fields in our SAM file:
+Now to the renaming fields in our SAM file:
 
 ![SAM1](../img/sam_bam3.png)
 
@@ -151,7 +151,7 @@ The next three fields are more pertinent to paired-end data. `MRNM` is the mate 
 
 Finally, you have the data from the original FASTQ file stored for each read. That is the raw sequence (`SEQ`) and the associated quality values for each position in the read (`QUAL`).
 
-Let;'s take a quick peek at our SAM file that we just generated. Since it is just a text file, we can browse through it using `less`:
+Let's take a quick peek at our SAM file that we just generated. Since it is just a text file, we can browse through it using `less`:
 
 ``` bash
 $ less H1hesc_Input_Rep1_chr12_aln_unsorted.sam
@@ -217,7 +217,31 @@ H1hesc_Input_Rep1_chr12_aln_unsorted.bam
 
 We could have also used `samtools` to perform the above sort, however using `sambamba` gives us dual functionality. List the contents of the directory -- what do you see? The advantage to using `sambamba` is that along with the newly sorted file, an index file is generated. If we used `samtools` this would have been a two-step process.
 
-### 3. Filtering uniquely mapping reads
+### 3. Marking potential PCR duplicates
+
+One common artifact that occurs with sequencing libraries is the presence of PCR duplicates, which are essentially identical copies of the same sequence that originate from PCR.  These arise at any step where PCR is used, for example during the initial steps used to amplify fragments with adapters.  There are a few more in-depth technical discussion available elsewhere, [for example here](http://www.cureffi.org/2012/12/11/how-pcr-duplicates-arise-in-next-generation-sequencing/).  
+
+The key problem with PCR duplicates is that they tend to be highly biased for specific positions or fragments in the genome, thus their presence can create problems for certain applications. With ChIP-Seq analysis, for example, they can appear to a peak caller as a region of enrichment, thus showing up as a false positive.
+
+For this run we choose to mark duplicates using the tool Picard.
+
+```bash
+module load picard/2.10.1-Java-1.8.0_152
+```
+
+Now let's run Picard's MarkDuplicates command:
+
+```bash
+java -jar $EBROOTPICARD/picard.jar MarkDuplicates \
+    I=H1hesc_Input_Rep1_chr12_aln_sorted.bam \
+    O=H1hesc_Input_Rep1_chr12_aln_sorted.dedup.bam \
+    M=$H1hesc_Input_Rep1_chr12_aln_sorted.metrics.txt \
+    CREATE_INDEX=true
+```
+
+This will generate another BAM file with the duplicates marked (the bit flag).  These can be optionally filtered later; some tools can also ignore any data that has the flag marked.
+
+### 4. Filtering uniquely mapping reads
 
 Finally, we can filter the BAM to keep only uniquely mapping reads. We will use the `sambamba view` command with the following parameters:
 
@@ -228,20 +252,21 @@ Finally, we can filter the BAM to keep only uniquely mapping reads. We will use 
 
 ```bash
 $ sambamba view -h -t 2 -f bam \
--F "[XS] == null and not unmapped  and not duplicate" \
-H1hesc_Input_Rep1_chr12_aln_sorted.bam > H1hesc_Input_Rep1_chr12_aln.bam
+    -F "[XS] == null and not unmapped  and not duplicate" \
+    H1hesc_Input_Rep1_chr12_aln_sorted.bam > H1hesc_Input_Rep1_chr12_aln.bam
 ```
+
 We filtered out unmapped reads by specifying in the filter `not unmapped`, and duplicates with `not duplicate`. Also, among the reads that were aligned, we filtered out multimappers by specifying `[XS] == null`. 'XS' is a tag generated by Bowtie2 that gives an alignment score for the second-best alignment, and it is only present if the read is aligned and more than one alignment was found for the read.
 
-Now that the alignment files contain only uniquely mapping reads, we are ready to perform peak calling.
+Now that the alignment files contain only uniquely mapping reads, we are almost ready to perform peak calling.  Let's do one more QC step prior to this though; let's run a tool called Qualimap, which will summarize information about the alignment file.
 
 > _**NOTE:** After performing read alignment, it's useful to generate QC metrics for the alignment using tools such as [MultiQC](http://multiqc.info) prior to moving on to the next steps of the analysis._
 
 > ### Filtering out Blacklisted Regions
 > Although we will not perform this step, it is common practice to apply an additional level of filtering to our BAM files. That is, we remove alignments that occur with defined Blacklisted Regions.
-> 
+>
 > Blacklisted regions represent artifact regions that tend to show artificially high signal (excessive unstructured anomalous reads mapping). These regions are often found at specific types of repeats such as centromeres, telomeres and satellite repeats and typically appear uniquely mappable so simple mappability filters applied above do not remove them. The ENCODE and modENCODE consortia have compiled blacklists for various species and genome versions including human, mouse, worm and fly. These blacklisted regions (coordinate files) can be filtered out from our alignment files before proceeding to peak calling.
-> 
+>
 > We will revisit this in more detail when we [discuss QC metrics](https://hbctraining.github.io/Intro-to-ChIPseq/lessons/07_QC_quality_metrics.html) in a later lesson.
 
 ***
