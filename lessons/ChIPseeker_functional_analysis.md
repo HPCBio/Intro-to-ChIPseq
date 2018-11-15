@@ -17,29 +17,29 @@ Approximate time: 60 minutes
 
 # ChIPseeker
 
-Now that we have a set of high confidence peaks for our samples, the next step is to **annotate our peaks to identify relative location relationship information between query peaks and genes/genomic features** to obtain some biological context. 
+Now that we have a set of high confidence peaks for our samples, the next step is to **annotate our peaks to identify relative location relationship information between query peaks and genes/genomic features** to obtain some biological context.
 
 <img src="../img/chip_workflow_june2017_step5.png" width="700">
 
 [ChIPseeker](http://bioconductor.org/packages/release/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html) is an R package for annotating ChIP-seq data analysis. It supports annotating ChIP peaks and provides functions to visualize ChIP peaks coverage over chromosomes and profiles of peaks binding to TSS regions. Comparison of ChIP peak profiles and annotation are also supported, and can be useful to estimate how well biological replications are. Several visualization functions are implemented to visualize the peak annotation and statistical tools for enrichment analyses of functional annotations.
 
 
-## Setting up 
+## Setting up
 
 1. Open up RStudio and open up the `chipseq-project` that we created previously.
 2. Open up a new R script ('File' -> 'New File' -> 'Rscript'), and save it as `chipseeker.R`
 
-> **NOTE:** This next section assumes you have the `ChIPseeker` package installed for R 3.3.3. You will also need one additional library for gene annotation. If you haven't done this please run the following lines of code before proceeding.
+> **NOTE:** This next section assumes you have the `ChIPseeker` package installed for R 3.5.1. You will also need one additional library for gene annotation. If you haven't done this please run the following lines of code before proceeding.
 >
 ```
-source("http://bioconductor.org/biocLite.R")
-biocLite("ChIPseeker")
-biocLite("TxDb.Hsapiens.UCSC.hg19.knownGene")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("ChIPseeker", version = "3.8")
 ```
 
-## Getting data 
+## Getting data
 
-As mentioned previously, these donwstream steps should be performed on your high confidence peak calls. While we have a set for our subsetted data, this set is rather small and will not result in anything meaningful in our functional analyses. **We have generated a set of high confidence peak calls using the full dataset.** These were obtained post-IDR analysis, (i.e. concordant peaks between replicates) and are provided in BED format which is optimal input for the ChIPseeker package. 
+As mentioned previously, these donwstream steps should be performed on your high confidence peak calls. While we have a set for our subsetted data, this set is rather small and will not result in anything meaningful in our functional analyses. **We have generated a set of high confidence peak calls using the full dataset.** These were obtained post-IDR analysis, (i.e. concordant peaks between replicates) and are provided in BED format which is optimal input for the ChIPseeker package.
 
 > **NOTE:** the number of peaks in these BED files are are significantly higher than what we observed with the subsetted data replicate analysis.
 
@@ -71,8 +71,8 @@ names(samplefiles) <- c("Nanog", "Pou5f1")
 We need to **assign annotation databases** generated from UCSC to a variable:
 
 	txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
-	
-> **NOTE:** *ChIPseeker supports annotating ChIP-seq data of a wide variety of species if they have transcript annotation TxDb object available.* To find out which genomes have the annotation available follow [this link](http://bioconductor.org/packages/3.5/data/annotation/) and scroll down to "TxDb". Also, if you are interested in creating your own TxDb object you will find [more information here](https://bioconductor.org/packages/devel/bioc/vignettes/GenomicFeatures/inst/doc/GenomicFeatures.pdf). 
+
+> **NOTE:** *ChIPseeker supports annotating ChIP-seq data of a wide variety of species if they have transcript annotation TxDb object available.* To find out which genomes have the annotation available follow [this link](http://bioconductor.org/packages/3.5/data/annotation/) and scroll down to "TxDb". Also, if you are interested in creating your own TxDb object you will find [more information here](https://bioconductor.org/packages/devel/bioc/vignettes/GenomicFeatures/inst/doc/GenomicFeatures.pdf).
 
 ### Visualization
 
@@ -120,13 +120,13 @@ ChIPseeker implements the `annotatePeak` function for annotating peaks with near
 
 <img src="../img/annotate-genes.png" width="800">
 
-The **`annotatePeak` function by default uses the TSS method, and provides parameters to specify a max distance cutoff.** There is also an option to report ALL genes within this distance regardless of whether there is overlap with TSS or not. For annotating genomic regions, annotatePeak function reports detail information when genomic region is Exon or Intron. For instance, ‘Exon (uc002sbe.3/9736, exon 69 of 80)’, means that the peak overlaps with the 69th exon of the 80 exons that transcript uc002sbe.3 possess and the corresponding Entrez gene ID is 9736. 
+The **`annotatePeak` function by default uses the TSS method, and provides parameters to specify a max distance cutoff.** There is also an option to report ALL genes within this distance regardless of whether there is overlap with TSS or not. For annotating genomic regions, annotatePeak function reports detail information when genomic region is Exon or Intron. For instance, ‘Exon (uc002sbe.3/9736, exon 69 of 80)’, means that the peak overlaps with the 69th exon of the 80 exons that transcript uc002sbe.3 possess and the corresponding Entrez gene ID is 9736.
 
 
 Let's start by retrieving annotations for our Nanog and Pou5f1 peaks calls:
 
 ```
-peakAnnoList <- lapply(samplefiles, annotatePeak, TxDb=txdb, 
+peakAnnoList <- lapply(samplefiles, annotatePeak, TxDb=txdb,
                        tssRegion=c(-1000, 1000), verbose=FALSE)
 ```
 
@@ -203,7 +203,7 @@ plotDistToTSS(peakAnnoList, title="Distribution of transcription factor-binding 
 <img src="../img/tss-dist.png">
 
 
-### Writing annotations to file 
+### Writing annotations to file
 
 It would be nice to have the annotations for each peak call written to file, as it can be useful to browse the data and subset calls of interest. The **annotation information** is stored in the `peakAnnoList` object. To retrieve it we use the following syntax:
 
@@ -261,13 +261,13 @@ Enrichment analysis is a widely used approach to identify biological themes, and
 Let's start with something we have seen before with RNA-seq functional analysis. We will take our gene list from **Nanog annotations** and use them as input for a **GO enrichment analysis**.
 
 ```
-# Run GO enrichment analysis 
-ego <- enrichGO(gene = entrez, 
-                    keytype = "ENTREZID", 
-                    OrgDb = org.Hs.eg.db, 
-                    ont = "BP", 
-                    pAdjustMethod = "BH", 
-                    qvalueCutoff = 0.05, 
+# Run GO enrichment analysis
+ego <- enrichGO(gene = entrez,
+                    keytype = "ENTREZID",
+                    OrgDb = org.Hs.eg.db,
+                    ont = "BP",
+                    pAdjustMethod = "BH",
+                    qvalueCutoff = 0.05,
                     readable = TRUE)
 
 # Output results from GO analysis to a table
@@ -306,15 +306,15 @@ Our dataset consist of two different transcription factor peak calls, so it woul
 genes = lapply(peakAnnoList, function(i) as.data.frame(i)$geneId)
 
 # Run KEGG analysis
-compKEGG <- compareCluster(geneCluster = genes, 
+compKEGG <- compareCluster(geneCluster = genes,
                          fun = "enrichKEGG",
                          organism = "human",
-                         pvalueCutoff  = 0.05, 
+                         pvalueCutoff  = 0.05,
                          pAdjustMethod = "BH")
 plot(compKEGG, showCategory = 20, title = "KEGG Pathway Enrichment Analysis")
 ```
 
-<img src="../img/compareCluster.png"> 
+<img src="../img/compareCluster.png">
 
 
 We have only scratched the surface here with functional analyses. Since the data is compatible with many current R packages for functional enrichment the possibilities there is alot of flexibility and room for customization. For more detailed analysis we encourage you to browse through the [ChIPseeker vignette](http://bioconductor.org/packages/release/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html) and the [clusterProfiler vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/clusterProfiler/inst/doc/clusterProfiler.html).
