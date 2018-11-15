@@ -111,15 +111,39 @@ We will also need to create a directory for the output generated from MACS2:
 $ mkdir -p ~/chipseq/results/macs2
 ```
 
-Now change directories to the `results` folder:
+Before we start, we should index the alignment files that we generated in the last run.  We can use `samtools` for this.
 
 ```bash
-$ cd ~/chipseq/results/
+$ module load SAMtools/1.7-IGB-gcc-4.9.4
+$ cd ~/chipseq/results/bowtie2
 ```
 
 > **NOTE:** If your automation script was successful, you should have alignment information for **all 6 files**. However, if you do not have these BAM files then you can copy them over using the command below:
 >
 >`$ cp /home/classroom/hpcbio/chip-seq/bowtie2/*.bam ~/chipseq/results/bowtie2/`
+
+Notice that you may actually have 7 alignment files.  One was left over from our
+initial alignment walkthrough (`H1hesc_Input_Rep1_chr12_aln.bam`).   We won't
+use this going forward so it can be ignored; you can remove this but remember
+that `rm` is  *irreversible*, so if you do so make sure to select the correct
+file.  
+
+Let's use a simple bash `for` loop (like we did in the script) to index the BAM files:
+
+```bash
+$ for i in *.bam;
+do
+    samtools index $i
+done
+```
+
+You should now see a `.bai` file for each BAM.  We'll need these later.
+
+Now change directories to the `results` folder:
+
+```bash
+$ cd ~/chipseq/results/
+```
 
 ### MACS2 parameters
 
@@ -165,7 +189,7 @@ $ macs2 callpeak -t bowtie2/H1hesc_Nanog_Rep1_aln.bam \
 	--outdir macs2
 ```
 
-The tool is quite verbose so you should see lines of text being printed to the terminal, describing each step that is being carried out. If that runs successfully, go ahead and **re-run the same command but this time let's capture that information into a log file using `2>` to re-direct the stadard error to file**:
+The tool is quite verbose so you should see lines of text being printed to the terminal, describing each step that is being carried out. If that runs successfully, go ahead and **re-run the same command but this time let's capture that information into a log file using `2>` to re-direct the standard error to file**:
 
 ```
 $ macs2 callpeak -t bowtie2/H1hesc_Nanog_Rep1_aln.bam \
