@@ -83,8 +83,8 @@ Let's start by loading the libraries.  Type these into your 'Source' window in t
 
 ```r
 # Load libraries
-# library(BiocParallel)
-# register(SerialParam())
+library(BiocParallel)
+register(SerialParam())
 library(ChIPseeker)
 library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 library(clusterProfiler)
