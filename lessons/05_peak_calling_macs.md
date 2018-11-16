@@ -95,7 +95,18 @@ Each peak is considered an independent test and thus, when we encounter thousand
 
 We will be using the newest version of this tool, MACS2. The underlying algorithm for peak calling remains the same as before, but it comes with some enhancements in functionality.
 
-### Setting up
+### Before we start
+
+Log into the cluster as before.  If you do not have the project data from last week, do the following:
+
+```bash
+$ cp /home/classroom/hpcbio/chip-seq/biocluster-project/chipseq.tgz .
+$ tar -zxvf chipseq.tgz
+```
+
+This should recreate your project space with the files needed for the next steps.
+
+### Setting up peak calling
 
 To run MACS2, we will first start an interactive session using 1 core (do this only if you don't already have one) and load the macs2 library:
 
