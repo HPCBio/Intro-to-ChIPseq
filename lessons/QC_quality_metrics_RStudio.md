@@ -158,19 +158,13 @@ Move the sample sheet into the `meta` folder.
 Let's start by loading the `ChIPQC` library and the sample sheet into R. Use the
 `View()` function to take a look at what the sample sheet contains.
 
-<!-- # We may need to make sure BiocParallel is installed as well (Windows)
-#if (!requireNamespace("BiocManager", quietly = TRUE))
-#    install.packages("BiocManager")
-#BiocManager::install("BiocParallel", version = "3.8") -->
-
 ```
-# for this workshop we need to do this first to work around a bug on Windows
+# Only needed for some Windows systems
+library(BiocParallel)
+register(SerialParam())
+
 ## Load libraries
 library(ChIPQC)
-
-# You may need to run this on Windows
-#library(BiocParallel)
-#register(SerialParam())
 
 ## Load sample data
 samples <- read.csv('meta/samplesheet_chr12.csv')
