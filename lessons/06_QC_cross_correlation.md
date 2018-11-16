@@ -135,7 +135,7 @@ file.
 Let's use a simple bash `for` loop (like we did in the script) to index the BAM files:
 
 ```bash
-$ for i in *.bam;
+$ for i in *.bam
 do
     samtools index $i
 done
