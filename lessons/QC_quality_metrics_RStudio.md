@@ -14,7 +14,6 @@ Approximate time: 1.5 hours
 * Generate a report containing quality metrics using `ChIPQC`
 * Identify sources of low quality data
 
-
 ## Additional Quality Metrics for ChIP-seq data
 
 <img src="../img/chip_workflow_june2017_step3.png" width="700">
@@ -31,7 +30,6 @@ regions.**
 > 'good measure' indicative of good quality data. Keep in mind that passing this
 > threshold does not automatically mean that an experiment is successful and a
 > values that fall below the threshold does not automatically mean failure!
-
 
 ### SSD
 
@@ -250,7 +248,7 @@ reads compared to the background levels of the feature. We find that there is
 most enrichment in promotor regions. This plot is useful when you expect
 enrichment of specific genomic regions.
 
-<img src="../img/GenomicFeatureEnrichment.png" width=500>
+<img src="../img/GenomicFeatureEnrichment.png" width="500">
 
 The next section, **ChIP Signal Distribution and Structure**, looks at the
 inherent ”peakiness” of the samples. The first plot is a **coverage histogram**.
@@ -266,14 +264,14 @@ but coverage looks low it is possibly due to the presence of large regions of
 high depth and a flag for blacklisting of genomic regions. The cross-correlation
 plot which is displayed next is one we have already covered.
 
-<img src="../img/CoverageHistogramPlot.png" width=500>
+<img src="../img/CoverageHistogramPlot.png" width="500">
 
 The final set of plots, **Peak Profile and ChIP Enrichment**, are based on
 metric computed using the supplied peaks if available. The first plot shows
 average peak profiles, centered on the summit (point of highest pileup) for each
 peak.
 
-<img src="../img/PeakProfile.png" width=500>
+<img src="../img/PeakProfile.png" width="500">
 
 The **shape of these profiles can vary depending on what type of mark is being
 studied** – transcription factor, histone mark, or other DNA-binding protein
@@ -286,9 +284,9 @@ overlapping called peaks. Although RiP is higher in Nanog, the boxplot for the
 Nanog samples shows quite different distributions between the replicates
 compared to Pou5f1.
 
-<img src="../img/Rip.png" width=500>
+<img src="../img/Rip.png" width="500">
 
-<img src="../img/Rap.png" width=500>
+<img src="../img/Rap.png" width="500">
 
 
 Finally, there are plots to show **how the samples are clustered**. The
@@ -299,9 +297,9 @@ which is a positive sign. For Nanog we see that Replicate 1 appears to correlate
 slightly better with Pou5f1 than with Replicate 2. The PCA also demonstrates
 distance between the Nanog replicates.
 
-<img src="../img/PeakCorHeatmap.png" width=500>
+<img src="../img/PeakCorHeatmap.png" width="500">
 
-<img src="../img/PeakPCA.png" width=500>
+<img src="../img/PeakPCA.png" width="500">
 
 
 In general, our data look good. There is some discordance apparent between the
