@@ -18,6 +18,7 @@ Approximate time: 1.5 hours
 
 <img src="../img/chip_workflow_june2017_step3.png" width=700>
 
+
 The [ENCODE consortium](https://genome.ucsc.edu/ENCODE/qualityMetrics.html)
 analyzes the quality of the data produced using a variety of metrics. We have
 already discussed metrics related to strand cross-correlation such as NSC and
@@ -76,6 +77,7 @@ repeats.
 
 <img src="../img/blacklist.png" width=600>
 
+
 These regions tend to have a very high ratio of multi-mapping to unique mapping
 reads and high variance in mappability. **The signal from blacklisted regions
 has been shown to contribute to confound peak callers and fragment length
@@ -119,6 +121,7 @@ and one for the MACS2 peak calls called `peakcalls`.
 Your Rstudio interface should look something like the screenshot below:
 
 <img src="../img/rstudio-screenshot.png">
+
 
 > **NOTE:** This next section assumes you have the `ChIPQC` package
 > (vChIPQC_1.10.3 or higher) installed for R 3.3.3. The desktops in the
