@@ -14,11 +14,10 @@ Approximate time: 1.5 hours
 * Generate a report containing quality metrics using `ChIPQC`
 * Identify sources of low quality data
 
+
 ## Additional Quality Metrics for ChIP-seq data
 
-
-<img src="../img/chip_workflow_june2017_step3.png" width=700>
-
+<img src="../img/chip_workflow_june2017_step3.png" width="700">
 
 The [ENCODE consortium](https://genome.ucsc.edu/ENCODE/qualityMetrics.html)
 analyzes the quality of the data produced using a variety of metrics. We have
