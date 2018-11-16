@@ -32,7 +32,6 @@ how well biological replications are. Several visualization functions are
 implemented to visualize the peak annotation and statistical tools for
 enrichment analyses of functional annotations.
 
-
 ## Setting up
 
 1. Open up RStudio and open up the `chipseq-project` that we created previously.
@@ -48,13 +47,14 @@ clustering. If you haven't done this please run the following lines of code
 before proceeding.
 
 ```
-source("http://bioconductor.org/biocLite.R")
-biocLite("ChIPseeker")
-biocLite("clusterProfiler")
-biocLite("biomaRt")
-biocLite("TxDb.Hsapiens.UCSC.hg19.knownGene")
-biocLite("org.Hs.eg.db")
-biocLite("BiocParallel")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("ChIPseeker", version = "3.8")
+BiocManager::install("clusterProfiler", version = "3.8")
+BiocManager::install("biomaRt", version = "3.8")
+BiocManager::install("TxDb.Hsapiens.UCSC.hg19.knownGene", version = "3.8")
+BiocManager::install("org.Hs.eg.db", version = "3.8")
+BiocManager::install("BiocParallel", version = "3.8")
 ```
 
 ## Getting data
@@ -82,9 +82,10 @@ new folder called `data/idr-bed`.**
 Let's start by loading the libraries.  Type these into your 'Source' window in the script, then highlight the commands and select 'Run'.
 
 ```r
-# Load libraries
+# Only needed for some Windows systems
 library(BiocParallel)
 register(SerialParam())
+
 library(ChIPseeker)
 library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 library(clusterProfiler)
