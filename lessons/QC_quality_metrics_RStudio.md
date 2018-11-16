@@ -75,8 +75,7 @@ simple mappability filters do not remove them**. These regions are often found
 at specific types of repeats such as centromeres, telomeres and satellite
 repeats.
 
-<img src="../img/blacklist.png" width=600>
-
+<img src="../img/blacklist.png" width="600">
 
 These regions tend to have a very high ratio of multi-mapping to unique mapping
 reads and high variance in mappability. **The signal from blacklisted regions
