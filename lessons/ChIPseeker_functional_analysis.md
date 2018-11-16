@@ -41,10 +41,13 @@ enrichment analyses of functional annotations.
 
 2. Open up a new R script ('File' -> 'New File' -> 'Rscript'), and save it as `chipseeker.R`
 
-3. This next section assumes you have the `ChIPseeker` package installed for R.
-You will also need additional libraries for gene annotation and basic
-clustering. If you haven't done this please run the following lines of code
-before proceeding.
+> **NOTE:** This next section assumes you have the `ChIPseeker` package
+> installed as well as some additional dependencies, and minimally are using R
+> 3.3.3. The desktops in the classroom have the latest version of ChIPseeker
+> installed, for R 3.5.1, and we are using the latest version of ChIPseeker.
+> **For legacy versions of R use [these instructions](http://bioconductor.org/install/#Legacy).**  
+> Otherwise, if you > are using the latest version of R you can run the following
+> lines of code before proceeding.
 
 ```
 if (!requireNamespace("BiocManager", quietly = TRUE))

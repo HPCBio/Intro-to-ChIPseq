@@ -122,8 +122,11 @@ Your Rstudio interface should look something like the screenshot below:
 
 > **NOTE:** This next section assumes you have the `ChIPQC` package
 > (vChIPQC_1.10.3 or higher) installed for R 3.3.3. The desktops in the
-> classroom have the latest version of ChIPQC installed, for R 3.5.1.  If you
-> haven't done this please run the following lines of code before proceeding.
+> classroom have the latest version of ChIPQC installed, for R 3.5.1, and we are
+> using the latest version of ChIPQC.  **For legacy versions of R use [these
+> instructions](http://bioconductor.org/install/#Legacy).**  Otherwise, if you are
+> using the latest version of R you can run the following lines of code before
+> proceeding.
 
 ```
 # Note this is for BioC 3.8
