@@ -172,7 +172,7 @@ The **heatmap is another method of visualizing the read count frequency** relati
 tagHeatmap(tagMatrixList, xlim=c(-1000, 1000), color=NULL)
 ```
 
-<img src="../img/Rplot.png" width=500>
+<img src="../img/Rplot.png" width="500">
 
 ## Annotation
 
@@ -182,7 +182,7 @@ calculate the distance of a peak to the nearest TSS and annotates the peak to
 that gene. This can be misleading as **binding sites might be located between
 two start sites of different genes**.
 
-<img src="../img/annotate-genes.png" width=800>
+<img src="../img/annotate-genes.png" width="800">
 
 The **`annotatePeak` function by default uses the TSS method, and provides
 parameters to specify a max distance cutoff.** There is also an option to report
@@ -250,7 +250,7 @@ functions can also support comparing across samples.
 plotAnnoPie(peakAnnoList[["Nanog"]])
 ```
 
-<img src="../img/pie.png" width=500>
+<img src="../img/pie.png" width="500">
 
 ### Vennpie of genomic region annotation
 
@@ -261,7 +261,7 @@ vennpie(peakAnnoList[["Nanog"]])
 
 You can see overlaps here, but actual size of sets is hard to determine.
 
-<img src="../img/vennpie.png" width=500>
+<img src="../img/vennpie.png" width="500">
 
 ### Upset Plot
 
@@ -274,7 +274,7 @@ categories.
 upsetplot(peakAnnoList[["Nanog"]], sets.bar.color = "lightgreen")
 ```
 
-<img src="../img/upset_plot.png" width=500>
+<img src="../img/upset_plot.png" width="500">
 
 ### Barchart
 
