@@ -16,6 +16,7 @@ Approximate time: 1.5 hours
 
 ## Additional Quality Metrics for ChIP-seq data
 
+
 <img src="../img/chip_workflow_june2017_step3.png" width=700>
 
 
