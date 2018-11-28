@@ -19,9 +19,9 @@ There are various strategies for visualizing enrichment patterns and we will exp
 
 ### Creating bigWig files
 
-The first thing we want to do is take our alignment files (BAM) and convert them into bigWig files. The bigWig format is an indexed binary format useful for dense, continuous data that will be displayed in a genome browser as a graph/track, but also is used as input for some of the visualization commands we will be running in `deepTools`. 
+The first thing we want to do is take our alignment files (BAM) and convert them into bigWig files. The bigWig format is an indexed binary format useful for dense, continuous data that will be displayed in a genome browser as a graph/track, but also is used as input for some of the visualization commands we will be running in `deepTools`.
 
-[`deepTools`](http://deeptools.readthedocs.org/en/latest/content/list_of_tools.html), is a suite of Python tools developed for the efficient analysis of high-throughput sequencing data, such as ChIP-seq, RNA-seq or MNase-seq. `deepTools` has a wide variety of commands that go beyond those that are covered in this lesson. We encourage you to look through the docuementation and explore on your own time. 
+[`deepTools`](http://deeptools.readthedocs.org/en/latest/content/list_of_tools.html), is a suite of Python tools developed for the efficient analysis of high-throughput sequencing data, such as ChIP-seq, RNA-seq or MNase-seq. `deepTools` has a wide variety of commands that go beyond those that are covered in this lesson. We encourage you to look through the docuementation and explore on your own time.
 
 
 <img src="../img/bam_to_bigwig.png" width="700">
@@ -31,7 +31,7 @@ The first thing we want to do is take our alignment files (BAM) and convert them
 Start an interactive session with 6 cores. *If you are already logged on to a compute node you will want to exit and start a new session*.
 
 ```bash
-$ srun --pty -p short -t 0-12:00 --mem 8G -n 6 --reservation=HBC bash
+$ srun --pty -p classroom --mem 8G -n 6 bash
 ```
 
 We will begin by creating a directory for the visualization output and loading the required modules to run `deepTools`.
@@ -42,18 +42,25 @@ $ mkdir -p visualization/bigWig visualization/figures
 ```
 
 ```bash
-$ module load gcc/6.2.0  python/2.7.12
-$ module load deeptools/2.5.3 
+$ module load deepTools/2.5.3-IGB-gcc-4.9.4-Python-2.7.13
 ```
 
-One last thing we need to do is **create an index file for each one of our BAM files**. To perform some functions on the BAM file, many tools require an index. Think of an index located at the back of a textbook. When you are interested in a particular subject area you look for the keyword in the index and identify the pages that contain the relevant information. Similarily, indexing the BAM file aims to achieve fast retrieval of alignments overlapping a specified region without going through the whole alignment file. 
+One last thing we may need to do is **create an index file for each one of our BAM files**. To perform some functions on the BAM file, many tools require an index. Think of an index located at the back of a textbook. When you are interested in a particular subject area you look for the keyword in the index and identify the pages that contain the relevant information. Similarly, indexing the BAM file aims to achieve fast retrieval of alignments overlapping a specified region without going through the whole alignment file.
 
-In order to index a BAM file, we will use [SAMtools](http://samtools.sourceforge.net/), a tool suite that provides alot of functionality in dealing with alignment files. There is a command called **`samtools index`**, which is what we will use. Since we need an index for each of our BAM files, we will put this in a `for` loop to avoid having to run the same command multiple times.
+In order to index a BAM file, we will use [SAMtools](http://samtools.sourceforge.net/), a tool suite that provides a lot of functionality in dealing with alignment files. There is a command called **`samtools index`**, which is what we will use. Since we need an index for each of our BAM files, we will put this in a `for` loop to avoid having to run the same command multiple times.
 
-First, let's load the module:
+First, check to see if the index files are present (we do create these in a past module, so it's worth checking):
+
+```
+$ ls ~/chipseq/results/bowtie2/*.bam*
+```
+
+Check whether there are `*.bai` files for each `.bam`.  If so, you can skip the next step.
+
+If not, let's load the module:
 
 ```bash
-$ module load samtools/1.3.1
+$ module load SAMtools/1.7-IGB-gcc-4.9.4
 ```
 
 Now, at the command prompt start the **`for` loop**:
@@ -73,7 +80,7 @@ done
 
 Now, to create our bigWig files there are two tools that can be useful: `bamCoverage` and `bamCompare`. The former will take in a single BAM file and return to you a bigWig file. The latter allows you to normalize two files to each other (i.e. ChIP sample relative to input) and will return a single bigWig file.
 
-Let's **create a bigWig file for Nanog replicate 2** using the `bamCoverage` command. In addition to the input and output files, there are a few additional parameters we have added. 
+Let's **create a bigWig file for Nanog replicate 2** using the `bamCoverage` command. In addition to the input and output files, there are a few additional parameters we have added.
 
 * `normalizeTo1x`: Report read coverage normalized to 1x sequencing depth (also known as Reads Per Genomic Content (RPGC)). Sequencing depth is defined as: (total number of mapped reads * fragment length) / effective genome size). So **the number provided here represents the effective genome size**. Some examples of values for commonly used organisms can be [found here](http://deeptools.readthedocs.io/en/latest/content/feature/effectiveGenomeSize.html).
 * `binSize`: size of bins in bases
@@ -127,12 +134,12 @@ Since we are using a toy dataset which contains only a subset of the data, using
 
 ### Profile plots and heatmaps
 
-Once you have bigWig files you can use them to get a global look at enrichment patterns in your data at specified regions. In our example, we will assess enrichment around the TSS and plot this separately for the Nanog and Pou5f1 samples (two replicates in each plot). 
+Once you have bigWig files you can use them to get a global look at enrichment patterns in your data at specified regions. In our example, we will assess enrichment around the TSS and plot this separately for the Nanog and Pou5f1 samples (two replicates in each plot).
 
 Rather than looking at the TSS for all known genes, we will only look be looking at genes on chromosome 12 in the interest of time. Copy over the BED file which contains the coordinates for all genes on chromosome 12 to the visualization folder.
 
 ```bash
-$ cp /n/groups/hbctraining/chip-seq/deepTools/chr12_genes.bed ~/chipseq/results/visualization/
+$ cp /home/classroom/hpcbio/chip-seq/deepTools/chr12_genes.bed ~/chipseq/results/visualization/
 ```
 
 Before we start plotting our data, we first need to prepare an intermediate file that can be used with the `plotHeatmap` and `plotProfile` commands.
@@ -149,7 +156,7 @@ First, let's create a matrix one for the Nanog replicates:
 $ computeMatrix reference-point --referencePoint TSS \
 -b 1000 -a 1000 \
 -R ~/chipseq/results/visualization/chr12_genes.bed \
--S /n/groups/hbctraining/chip-seq/full-dataset/bigWig/Encode_Nanog*.bw \
+-S /home/classroom/hpcbio/chip-seq/full-dataset/bigWig/Encode_Nanog*.bw \
 --skipZeros \
 -o ~/chipseq/results/visualization/matrixNanog_TSS_chr12.gz \
 --outFileSortedRegions ~/chipseq/results/visualization/regions_TSS_chr12.bed
@@ -165,13 +172,13 @@ Now, let's create another matrix for the Pou5f1 replicates:
 $ computeMatrix reference-point --referencePoint TSS \
 -b 1000 -a 1000 \
 -R ~/chipseq/results/visualization/chr12_genes.bed \
--S /n/groups/hbctraining/chip-seq/full-dataset/bigWig/Encode_Pou5f1*.bw \
+-S  /home/classroom/hpcbio/chip-seq/full-dataset/bigWig/Encode_Pou5f1*.bw \
 --skipZeros -o ~/chipseq/results/visualization/matrixPou5f1_TSS_chr12.gz \
 --outFileSortedRegions ~/chipseq/results/visualization/regionsPou5f1_TSS_chr12.bed
 
 ```
 
-Using that matrix we can create a **profile plot** which is essentially a density plot that evaluates read density across all transcription start sites. For Nanog, we can see that **Replicate 2 has a particularly higher amount of signal at the TSS compared to Replicate 1**. 
+Using that matrix we can create a **profile plot** which is essentially a density plot that evaluates read density across all transcription start sites. For Nanog, we can see that **Replicate 2 has a particularly higher amount of signal at the TSS compared to Replicate 1**.
 
 ```bash
 $ plotProfile -m visualization/matrixNanog_TSS_chr12.gz \
@@ -237,7 +244,7 @@ $ plotHeatmap -m visualization/matrixPou5f1_TSS_chr12.gz \
 ### Differential enrichment
 
 > **NOTE:** Identifying differential binding sites across multiple conditions has become of practical importance in biological and medical research and more tools have become available for this type of analysis.  For each group **we have two replicates, and it would be best to use tools that make use of these replicates (i.e [DiffBind](http://bioconductor.org/packages/release/bioc/html/DiffBind.html)**, [ChIPComp](https://www.bioconductor.org/packages/3.3/bioc/html/ChIPComp.html)) to compute statistics reflecting how significant the changes are. If you are interested in learning more, we have a [lesson on DiffBind](https://hbctraining.github.io/Intro-to-ChIPseq/lessons/diffbind_differential_peaks.html) analysis using this same dataset.
-> 
+>
 
 
 To provide a more complex picture of biological processes in a cell, many studies aim to compare different datasets obtained by ChIP-seq. In our dataset, we have peak calls from two different transcription factors: Nanog and Pou5f1. To look at the differences in binding between the two we will use `bedtools`.
@@ -247,7 +254,9 @@ You may already have the module loaded, but in case you don't you will need to l
 ```bash
 $ module list # check which modules you have listed
 
-$ module load gcc/6.2.0 bedtools/2.26.0 
+$ module load BEDTools/2.26.0-IGB-gcc-4.9.4
+
+$ mkdir bedtools
 ```
 
 Before using bedtools to obtain the overlap, we need to combine the information from both replicates. We will do this by concatenating (`cat`) the peak calls into a single file.
@@ -259,13 +268,13 @@ Before using bedtools to obtain the overlap, we need to combine the information 
 ```bash
 $ cat macs2/Nanog-rep1_peaks.narrowPeak macs2/Nanog-rep2_peaks.narrowPeak > macs2/Nanog_combined.narrowPeak
 
-$ cat macs2/Pou5f1-rep1_peaks.narrowPeak macs2/Pou5f1-rep2_peaks.narrowPeak > macs2/Pou5f1_combined.narrowPeak	
+$ cat macs2/Pou5f1-rep1_peaks.narrowPeak macs2/Pou5f1-rep2_peaks.narrowPeak > macs2/Pou5f1_combined.narrowPeak
 
-```	
+```
 
 #### Merge peaks within a file
 
-Now for each for each of those combined peak files we need to merge regions that are overlapping. However, `bedtools merge` **requires a sorted file** as input as specified in the help documentation. 
+Now for each for each of those combined peak files we need to merge regions that are overlapping. However, `bedtools merge` **requires a sorted file** as input as specified in the help documentation.
 
 <img src="../img/merge-glyph.png" width="600">
 
@@ -282,17 +291,17 @@ The `sort` command allows you to sort lines of text in a file. However, **when y
 We will sort the file and pipe (`|`) the output to `less` to take a quick peek at the sorted file.
 
 ```bash
-	
-$ sort -k1,1 -k2,2n macs2/Nanog_combined.narrowPeak | less 
-	
-```	
+
+$ sort -k1,1 -k2,2n macs2/Nanog_combined.narrowPeak | less
+
+```
 
 #### Sort peaks and then merge
 
 Let's  start with the Nanog replicates:
 
 ```bash
-$ sort -k1,1 -k2,2n macs2/Nanog_combined.narrowPeak | bedtools merge -i - > bedtools/Nanog_merged.bed 
+$ sort -k1,1 -k2,2n macs2/Nanog_combined.narrowPeak | bedtools merge -i - > bedtools/Nanog_merged.bed
 ```
 
 > **NOTE:** this command modifies your `narrowPeak` file into a simple, 3-column `bed` file.
@@ -300,8 +309,8 @@ $ sort -k1,1 -k2,2n macs2/Nanog_combined.narrowPeak | bedtools merge -i - > bedt
 Now, we'll do the same for Pou5f1:
 
 ```bash
-$ sort -k1,1 -k2,2n macs2/Pou5f1_combined.narrowPeak | bedtools merge -i - > bedtools/Pou5f1_merged.bed 
-	
+$ sort -k1,1 -k2,2n macs2/Pou5f1_combined.narrowPeak | bedtools merge -i - > bedtools/Pou5f1_merged.bed
+
 ```
 
 > **NOTE:** You could also use the IDR-optimized set of peaks we generated, instead of combining and merging. In our case, because we are looking at a small subset of the data the number of IDR peaks is very low and so this will give us more peaks as a starting point to evaluate the differences.
@@ -313,22 +322,29 @@ The `bedtools intersect` will report back the peaks that are overlapping in the 
 
 <img src="../img/bedtools_intersect.png" width="600">
 
-	$ bedtools intersect -h
-	
-	$ bedtools intersect -a bedtools/Nanog_merged.bed -b bedtools/Pou5f1_merged.bed -v > bedtools/Nanog_only_peaks.bed
-	
-If we reverse the files listed for `-a` and `-b`, this will now give us peaks that are only present in Pou5f1:
-	
-	$ bedtools intersect -a bedtools/Pou5f1_merged.bed -b bedtools/Nanog_merged.bed -v > bedtools/Pou5f1_only_peaks.bed
+```
+$ bedtools intersect -h
 
+$ bedtools intersect -a bedtools/Nanog_merged.bed -b bedtools/Pou5f1_merged.bed -v > bedtools/Nanog_only_peaks.bed
+````
+
+If we reverse the files listed for `-a` and `-b`, this will now give us peaks that are only present in Pou5f1:
+
+```
+$ bedtools intersect -a bedtools/Pou5f1_merged.bed -b bedtools/Nanog_merged.bed -v > bedtools/Pou5f1_only_peaks.bed
+```
 
 **How many peaks are unique to Nanog?**
 
-	$ wc -l bedtools/Nanog_only_peaks.bed
-	
+```
+$ wc -l bedtools/Nanog_only_peaks.bed
+```
+
 **How many peaks are unique to Pou5f1?**
 
-	$ wc -l bedtools/Pou5f1_only_peaks.bed
+```
+$ wc -l bedtools/Pou5f1_only_peaks.bed
+```
 
 We could **visualize read density at these sites by using some of the `deepTools` commands we had explored previously.**
 
@@ -336,7 +352,7 @@ We could **visualize read density at these sites by using some of the `deepTools
 
  $ computeMatrix scale-regions \
 -R ~/chipseq/results/bedtools/Nanog_only_peaks.bed \
--S /n/groups/hbctraining/chip-seq/full-dataset/bigWig/Encode_Pou5f1*.bw /n/groups/hbctraining/chip-seq/full-dataset/bigWig/Encode_Nanog*.bw \
+-S /home/classroom/hpcbio/chip-seq/full-dataset/bigWig/Encode_Pou5f1*.bw /home/classroom/hpcbio/chip-seq/full-dataset/bigWig/Encode_Nanog*.bw \
 --skipZeros -p 6 \
 -a 500 -b 500 \
 -o ~/chipseq/results/visualization/matrixAll_Nanog_binding_sites.gz
@@ -355,12 +371,12 @@ $ plotProfile -m visualization/matrixAll_Nanog_binding_sites.gz \
 
 ```bash
 
- $ computeMatrix scale-regions \
+$ computeMatrix scale-regions \
 -R ~/chipseq/results/bedtools/Pou5f1_only_peaks.bed \
--S /n/groups/hbctraining/chip-seq/full-dataset/bigWig/Encode_Pou5f1*.bw /n/groups/hbctraining/chip-seq/full-dataset/bigWig/Encode_Nanog*.bw \
+-S /home/classroom/hpcbio/chip-seq/full-dataset/bigWig/Encode_Pou5f1*.bw /home/classroom/hpcbio/chip-seq/full-dataset/bigWig/Encode_Nanog*.bw \
 --skipZeros -p 6 \
 -a 500 -b 500 \
--o ~/chipseq/results/visualization/matrixAll_Pou5f1_binding_sites.gz 
+-o ~/chipseq/results/visualization/matrixAll_Pou5f1_binding_sites.gz
 
 
 $ plotProfile -m visualization/matrixAll_Pou5f1_binding_sites.gz \
