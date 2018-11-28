@@ -8,7 +8,7 @@ Approximate time: 80 minutes
 
 ## Learning Objectives
 * Generate bigWig files
-* Visualizing enrichment patterns at particular locations in the genome
+* Visualizing enrichment patterns at particular locations in the genome using deepTools
 * Evaluating regions of differential enrichment using `bedtools`
 
 ## Visualization of ChIP-seq data
