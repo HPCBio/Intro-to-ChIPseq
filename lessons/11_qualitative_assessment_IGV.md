@@ -35,7 +35,7 @@ Open up `Cyberduck` or `MobaXTerm` and connect to the transfer node on O2. Navig
 > **NOTE:** We are copying over only a single sample bigWig from each group. Since we observed that in each case there was a stronger replicate (high read density) that is what we used to make our selection.
 
 
-Start [IGV](https://www.broadinstitute.org/software/igv/download) _You should have this previously installed on your laptop._
+Start [IGV](http://software.broadinstitute.org/software/igv/download).  If it's not installed, download it and move it to your desktop.
 
 * Load the Human genome (hg19) into IGV using the dropdown menu at the top left of your screen. _Note: there is also an option to "Load Genomes from File..." under the "Genomes" pull-down menu - this is useful when working with non-model organisms_
 * Load the bigWig files and BED files using the **"Load from File..."** option under the **"File"** pull-down menu.
