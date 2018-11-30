@@ -17,14 +17,14 @@ Another method for assessing the quality of your alignment is to visualize the a
 
 ### Transfer files
 
-In order to visualize our ChIP-seq enrichment we will first need to move over the bigWig files. We previously used `FileZilla` to transfer files from O2 to your laptop and so we will do the same for these files.
+In order to visualize our ChIP-seq enrichment we will first need to move over the bigWig files. We previously used `MobaXTerm` or `Cyberduck` to transfer files from Biocluster to your laptop and so we will do the same for these files.
 
 
-> **NOTE:**  There is another way to do so using the command line interface. Similar to the `cp` command to copy there is a command that allows you to securely copy files between computers. **The command is called `scp` and allows files to be copied to, from, or between different hosts.** It uses ssh for data transfer and provides the same authentication and same level of security as ssh. The first argument is the location on the remote server and the second argument is the destination on your local machine. 
+> **NOTE:**  There is another way to do so using the command line interface. Similar to the `cp` command to copy there is a command that allows you to securely copy files between computers. **The command is called `scp` and allows files to be copied to, from, or between different hosts.** It uses ssh for data transfer and provides the same authentication and same level of security as ssh. The first argument is the location on the remote server and the second argument is the destination on your local machine.
 >
 > `$ scp username@transfer.rc.hms.harvard.edu:/path/to/file_on_O2 Path/to/directory/local_machine`
 
-Open up `FileZilla` and connect to the transfer node on O2. Navigate to the correct directory on the cluster panel and copy over the following files:
+Open up `Cyberduck` or `MobaXTerm` and connect to the transfer node on O2. Navigate to the correct directory on the cluster panel and copy over the following files:
 
 * Nanog-Rep2: `~/chipseq/results/visualization/bigWig/H1hesc_Nanog_Rep2.bw`
 * Pou5f1-Rep1: `~/chipseq/results/visualization/bigWig/H1hesc_Pou5f1_Rep1.bw `
@@ -38,14 +38,14 @@ Open up `FileZilla` and connect to the transfer node on O2. Navigate to the corr
 Start [IGV](https://www.broadinstitute.org/software/igv/download) _You should have this previously installed on your laptop._
 
 * Load the Human genome (hg19) into IGV using the dropdown menu at the top left of your screen. _Note: there is also an option to "Load Genomes from File..." under the "Genomes" pull-down menu - this is useful when working with non-model organisms_
-* Load the bigWig files and BED files using the **"Load from File..."** option under the **"File"** pull-down menu. 
+* Load the bigWig files and BED files using the **"Load from File..."** option under the **"File"** pull-down menu.
 
 Your IGV interface should now look something like the screenshot below. By default, you will be in a zoomed out view. You will notice that for both bigWig tracks there appears to be a dense blue chunk at the beginning of chromosome 12, which makes sense considering the subsetted toy dataset we are working with. **Use the pulldown menu to zoom into chromosome 12.**
 
 <img src="../img/igv-1.png">
 
 > Before we start looking at specific genes you will want to **Autoscale** each track.
-> 
+>
 > * Right click on the left-hand side panel. You should see many options available to you. If "Autoscale" is not checked go ahead and do this. You can do the same for both bigWig tracks.
 
 The interaction between Pou5f1, and Nanog is supported by immunoprecipitation, functional analysis, and co-localization of binding sites, and so it is not surprising that they share the **same target genes**. While our BED files congtain peaks that are non-overlapping, the target genes that harbor these peaks can still be overlapping.

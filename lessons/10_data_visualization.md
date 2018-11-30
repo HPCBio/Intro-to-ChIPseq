@@ -31,7 +31,7 @@ The first thing we want to do is take our alignment files (BAM) and convert them
 Start an interactive session with 6 cores. *If you are already logged on to a compute node you will want to exit and start a new session*.
 
 ```bash
-$ srun --pty -p classroom --mem 8G -n 6 bash
+$ srun --pty -p classroom --mem 8G -n 4 bash
 ```
 
 We will begin by creating a directory for the visualization output and loading the required modules to run `deepTools`.
