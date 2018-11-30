@@ -127,6 +127,8 @@ This may take some time depending on the server load and the size of the file. W
 
 http://alternate.meme-suite.org/opal-jobs/appDREME_5.0.215436021745822004019099/dreme.html
 
+[Alternative download](https://uofi.box.com/s/y74gr4q1soubj348dwap9hxb9a3ql8f8)
+
 ![dreme_output](../img/dreme_output.png)
 
 DREME’s HTML output provides a list of Discovered Motifs displayed as sequence logos (in the forward and reverse complement (RC) orientations), along with an E-value for the significance of the result.
