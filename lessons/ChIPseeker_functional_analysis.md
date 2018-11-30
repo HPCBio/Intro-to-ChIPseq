@@ -247,7 +247,13 @@ To visualize this annotation data ChIPseeker provides several functions. We will
 demonstrate a few using the Nanog sample only. We will also show how some of the
 functions can also support comparing across samples.
 
+## Some example simple visualizations
+
+Let's start with some simple summary visualization.
+
 ### Pie chart of genomic region annotation
+
+This plot gives overall categories, but it doesn't account for instances where a peak may belong to multiple groups.
 
 ```
 # Pie chart
@@ -257,6 +263,8 @@ plotAnnoPie(peakAnnoList[["Nanog"]])
 <img src="../img/pie.png" width="500">
 
 ### Vennpie of genomic region annotation
+
+This is a version of the pie chart that does show additional layers, but still lacks some information.
 
 ```
 # Venn pie
@@ -334,9 +342,12 @@ following priority in genomic annotation.
 V4 and V5 are generic names R assigns to columns without IDs; these correspond
 to the peak name and peak weight.
 
-One thing we **don't have is gene symbols** listed in table, but we can fetch
-them using **Biomart** and add them to the table before we write to file. This
-makes it easier to browse through the results.
+One thing we **don't have is gene symbols** listed in table.  There are several ways to
+get this information (e.g. using R's OrganismDb annotation databases, like `org.Hs.eg.db`).
+
+Here we'll show a way to get this information using **Biomart** and add them to
+the table before we write to file. This makes it easier to browse through the
+results.
 
 ```
 # Get entrez gene Ids
