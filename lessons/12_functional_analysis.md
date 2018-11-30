@@ -109,7 +109,11 @@ DREME is tailored to eukaryotic data by focusing on short motifs (4 to 8 nucleot
 
 ### DREME
 
-Visit the [DREME website](http://meme-suite.org/tools/dreme) and perform the following steps:
+Visit the [alternate DREME website](http://alternate.meme-suite.org/tools/dreme).
+
+**Make sure the URL is http://alternate.meme-suite.org/tools/dreme**
+
+Perform the following steps:
 
 1. Select the downloaded `Nanog-idr-merged-dreme.fasta` as input to DREME
 2. Enter your email address so that DREME can email you once the analysis is complete
@@ -120,8 +124,6 @@ You will be shown a status page describing the inputs and the selected parameter
 ![results_page](../img/dreme_processing.png)
 
 This may take some time depending on the server load and the size of the file. While you wait, take a look at the [expected results](http://meme-suite.org/info/status?service=DREME&id=appDREME_5.0.115330443284501107678163).
-
-http://meme-suite.org/opal-jobs/appDREME_5.0.115330443284501107678163/dreme.html
 
 ![dreme_output](../img/dreme_output.png)
 
